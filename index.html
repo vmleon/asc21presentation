@@ -30,17 +30,18 @@
 				<section>About me</section>
 				<section>
 					<img class="r-frame" style="background: rgba(255,255,255,0.1);" data-src="images/victor.jpg" alt="Victor Picture">
-					<p>I am Victor Martin</p>
+					<p>Victor Martin</p>
 					<p>
-						<small>Technology Product Strategy</small>
+						<small>Technology Product Strategy Manager</small>
 					</p>
-					<p>
+					<div class="r-hstack justify-center">
+						<img width="50" data-src="images/oracle_logo.png" alt="Oracle Logo">
 						<small>Oracle Cloud</small>
-					</p>
+					</div>
 				</section>
 				<section>
 					<p>
-						Former software developer at:
+						<small>Former Software Developer at:</small>
 					</p>
 					<ul>
 						<li>42Crunch - API Security</li>
@@ -51,58 +52,143 @@
 				</section>
 			</section>
 			<section>
-				<section>Serverless</section>
-			</section>
-			<section>
-				<section>API Gateway</section>
-			</section>
-			<section>
-				<section>Composing</section>
 				<section>
-					<h2 data-id="code-title">Rate Limiting</h2>
-					<section data-auto-animate>
-						<pre><code class="hljs" data-trim data-line-numbers="|1|2|3|4">
-							"requestPolicies": {
-								"rateLimiting": {
-									"rateKey": "CLIENT_IP",
-									"rateInRequestsPerSecond": 30
-								}
-							}
-						</code></pre>
-					</section>
+					<h3>Serverless</h3>
 				</section>
 				<section>
-					<h2 data-id="code-title">Cache</h2>
-					<section data-auto-animate>
-						<pre><code class="hljs" data-trim data-line-numbers="|4-5|8">
+					<blockquote cite="https://readwrite.com/2012/10/15/why-the-future-of-software-and-apps-is-serverless/">
+						&ldquo;The phrase &apos;serverless&apos; doesn’t mean servers are no longer involved.<br>
+						It simply means that developers no longer have to think that much about them.<br>
+						Computing resources get used as services without having to manage around physical capacities or limits.&rdquo;
+					</blockquote>
+					<div class="justify-right">&#8212; by Ken Fromm (2012)</div>
+				</section>
+				<section>
+					<p>
+						Total cost of ownership of servers has fallen dramatically.
+					</p>
+					<p><small>Units for Compute Provisioning</small></p>
+					<p>Years >> Months >> Hours >> Seconds</p>
+					<p><small>Serverless is the way to achieve it.</small></p>
+				</section>
+				<section>
+					<p>What is Serverless?</p>
+					<ul>
+						<li>Abstraction on server or host</li>
+						<li>Auto-scale and Auto-provisioning</li>
+						<li>Granular cost</li>
+						<li>Highly Available</li>
+					</ul>
+				</section>
+				<section>
+					<p>Serverless is more than Functions</p>
+					<ul>
+						<li>Functions As A Service</li>
+						<li>DataBase As A Service</li>
+						<li>Messaging As A Service</li>
+						<li>Storage As A Service</li>
+						<li>... and more</li>
+					</ul>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h3>API Gateway</h3>
+				</section>
+				<section>Deliver APIs to End User in Production</section>
+				<section>
+					<p>API Gateway</p>
+					<ul>
+						<li>Reverse Proxy for APIs</li>
+						<li>Single endpoint for a group of APIs</li>
+						<li>Public or Private</li>
+						<li>Protect APIs from misuse</li>
+						<li>Improve performance</li>
+					</ul>
+					
+				</section>
+			</section>
+			<section>
+				<section>Set up an API Gateway</section>
+				<section data-auto-animate>
+					<h2 data-id="legacy-routing-code">Legacy Backend Routing</h2>
+					<pre><code class="hljs" data-trim data-line-numbers="|3|4|6,7">
+						"routes": [
 							{
-								"type": "EXTERNAL_RESP_CACHE",
-								"servers": [
+								"path": "/legacy/weather",
+								"methods": ["GET"],
+								"backend": {
+									"type": "HTTP_BACKEND",
+									"url": "https://api.example.com/api/v1/weather",
+									"connectTimeoutInSeconds": 45,
+									"readTimeoutInSeconds": 15,						
+									"sendTimeoutInSeconds": 15,
+									"isSSLVerifyDisabled": false
+							}
+						]
+						</code></pre>
+					</section>
+					<section data-auto-animate>
+						<h2 data-id="serverless-route-code">Serverless Backend Routing</h2>
+						<pre><code class="hljs" data-trim data-line-numbers="|3|4|6,7">
+							"routes": [
 								{
-									"host": "cache.example.com",
+								"path": "/primefactors/{number}",
+								"methods": ["GET"],
+								"backend": {
+									"type": "ORACLE_FUNCTIONS_BACKEND",
+									"functionId": "function-id"
+								}
+							]
+						</code></pre>
+					</section>
+					<section data-auto-animate>
+					<h2 data-id="rate-code">Rate Limiting</h2>
+					<pre><code class="hljs" data-trim data-line-numbers="|1|2|3|4">
+						"requestPolicies": {
+							"rateLimiting": {
+								"rateKey": "CLIENT_IP",
+								"rateInRequestsPerSecond": 30
+							}
+						}
+					</code></pre>
+				</section>
+				<section data-auto-animate>
+					<h2 data-id="cache-code">Cache</h2>
+					<pre><code class="hljs" data-trim data-line-numbers="|2|5,6|9">
+						{
+							"type": "EXTERNAL_RESP_CACHE",
+							"servers": [
+								{
+									"host": "redis.example.com",
 									"port": 6379
 								}
-								],
-								"authenticationSecretId": "<ocid-secret>",
-								"authenticationSecretVersionNumber": 1,
-								"isSSLEnabled": true,
-								"isSSLVerifyDisabled": false,
-								"connectTimeoutInMs": 1000,
-								"readTimeoutInMs": 250,
-								"sendTimeoutInMs": 1000
-							}
-						</code></pre>
-					</section>
+							],
+							"authenticationSecretId": "secret-id",
+							"authenticationSecretVersionNumber": 1,
+							"isSSLEnabled": true,
+							"isSSLVerifyDisabled": false,
+							"connectTimeoutInMs": 1000,
+							"readTimeoutInMs": 250,
+							"sendTimeoutInMs": 1000
+						}
+					</code></pre>
 				</section>
 			</section>
-			<section>Wrap Up</section>
+			<section>
+				<h3>
+					Try it
+				</h3>
+				<div>
+					<a href="https://github.com/vmleon/asc21talk">Repository with workable demo</a>
+				</div>
+			</section>
 			<section>
 				<h3>Thank you</h3>
-				<small>Check what I am doing at <a href="https://github.com/vmleon">GitHub</a></small>
 			</section>
 			<section>
 				<h3>Q&A</h3>
-				<small>Check what I am doing at <a href="https://github.com/vmleon">GitHub</a></small>
+				<small>Check what I am working on at <a href="https://github.com/vmleon">github.com/vmleon</a></small>
 			</section>
 		</div>
 	</div>
